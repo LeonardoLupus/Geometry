@@ -40,7 +40,7 @@ Point2D::Point2D(const double x, const double y) {
     setXY(x, y);
 }
 
-Point2D::Point2D(const double radius, const Angel& theta) {
+Point2D::Point2D(const double radius, const Angle& theta) {
     setPolar(radius, theta);
 }
 
@@ -50,7 +50,7 @@ auto Point2D::setXY(const double x, const double y) -> void {
     calculateCoord();
 }
 
-auto Point2D::setPolar(const double radius, const Angel& theta) -> void {
+auto Point2D::setPolar(const double radius, const Angle& theta) -> void {
     this->radius = radius;
     this->theta = theta;
     calculateCoord(false);
@@ -71,7 +71,7 @@ auto Point2D::addRadius(double radius) -> void {
     calculateCoord(false);
 }
 
-auto Point2D::addTheta(const Angel &theta) -> void {
+auto Point2D::addTheta(const Angle &theta) -> void {
     this->theta += theta;
     calculateCoord(false);
 }
@@ -88,7 +88,7 @@ auto Point2D::getRadius() const -> const double& {
     return radius;
 }
 
-auto Point2D::getTheta() const -> const Angel& {
+auto Point2D::getTheta() const -> const Angle& {
     return theta;
 }
 
@@ -99,7 +99,7 @@ auto Point2D::isNull() -> const bool {
 auto Point2D::calculateCoord(bool xy) -> void {
     if (xy) {
         radius = std::sqrt(x*x + y*y);
-        theta = (x / radius * (y < 0?-1:1));
+        theta = radius == 0 ? 0 : std::acos( x/radius * (y < 0 ? -1 : 1) );
     } else {
         x = radius * std::cos(theta.getRadian());
         y = radius * std::sin(theta.getRadian());

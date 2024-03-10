@@ -11,7 +11,7 @@
 class Vector2D {
 public:
     friend auto operator+(const Vector2D& a, const Vector2D& b)->Vector2D;
-    friend auto operator+(const Vector2D& a, const Angel& b)->Vector2D;
+    friend auto operator+(const Vector2D& a, const Angle& b)->Vector2D;
     friend auto operator-(const Vector2D& a, const Vector2D& b)->Vector2D;
     friend auto operator*(const Vector2D& a, double b)->Vector2D;
     friend auto operator*(const Vector2D& a, const Vector2D& b)->double;
@@ -23,7 +23,7 @@ public:
     explicit Vector2D(const Point2D& end);
     Vector2D(double x, double y);
     Vector2D(const Point2D& begin, const Point2D& end);
-    Vector2D(const Angel& phi, double length, Point2D begin = {0, 0});
+    Vector2D(const Angle& phi, double length, Point2D begin = {0, 0});
 
     auto setBegin(const Point2D& begin)->void;
     auto setEnd(const Point2D& end)->void;
@@ -31,14 +31,15 @@ public:
     auto setLength(double lengthRadius)->void;
     auto addLength(double lengthRadius)->void;
 
-    auto getAngel()const -> const Angel&;
+    auto getAngle()const -> const Angle&;
+    auto getLength()const -> const double;
     auto getEnd()const -> const Point2D&;
     auto getStart()const -> const Point2D&;
     auto getVector()const -> const Point2D&;
     auto getVectorX()const -> const double&;
     auto getVectorY()const -> const double&;
 
-    static auto angelVectors(const Vector2D& a, const Vector2D& b) -> const Angel;
+    static auto AngleVectors(const Vector2D& a, const Vector2D& b) -> const Angle;
     static auto isCollinear(const Vector2D& a, const Vector2D& b) -> const bool;
     static auto onOneLine(const Point2D& a, const Point2D& b, const Point2D& c) -> const bool;
 

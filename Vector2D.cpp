@@ -10,8 +10,8 @@ auto operator+(const Vector2D& a, const Vector2D& b)->Vector2D {
     return Vector2D(a.pointStart, a.pointEnd + b.direction);
 }
 
-auto operator+(const Vector2D &a, const Angel &b)->Vector2D {
-    return Vector2D{b + a.direction.getTheta(), a.direction.getRadius(), a.getStart()};
+auto operator+(const Vector2D &a, const Angle &b)->Vector2D {
+    return Vector2D{b + a.getAngle(), ~a, a.getStart()};
 }
 
 auto operator-(const Vector2D& a, const Vector2D& b)->Vector2D {
@@ -19,7 +19,7 @@ auto operator-(const Vector2D& a, const Vector2D& b)->Vector2D {
 }
 
 auto operator*(const Vector2D &a, double b) -> Vector2D {
-    return Vector2D(a.getStart(), a.getStart() + Point2D(a.getVectorX() * b, a.getVectorY() * b));
+    return Vector2D(a.getAngle(), (~a)*b, a.getStart());
 }
 
 auto operator*(const Vector2D &a, const Vector2D &b) -> double {
@@ -58,9 +58,9 @@ Vector2D::Vector2D(const Point2D& begin, const Point2D& end) {
     calculateDirection();
 }
 
-Vector2D::Vector2D(const Angel &phi, const double length, Point2D begin) {
+Vector2D::Vector2D(const Angle &phi, const double length, Point2D begin) {
     pointStart = begin;
-    direction.setXY(length* cos(phi.getRadian()), length* sin(phi.getRadian()));
+    direction.setPolar(length,phi);
     calculateEnd();
 }
 
@@ -89,8 +89,12 @@ auto Vector2D::addLength(double lengthRadius) -> void {
     calculateDirection();
 }
 
-auto Vector2D::getAngel() const -> const Angel & {
+auto Vector2D::getAngle() const -> const Angle & {
     return direction.getTheta();
+}
+
+auto Vector2D::getLength() const -> const double {
+    return direction.getRadius();
 }
 
 auto Vector2D::getEnd() const -> const Point2D & {
@@ -113,12 +117,12 @@ auto Vector2D::getVectorY() const -> const double & {
     return direction.getY();
 }
 
-auto Vector2D::angelVectors(const Vector2D &a, const Vector2D &b) -> const Angel {
-    return Angel{atan2(a^b, a*b)};
+auto Vector2D::AngleVectors(const Vector2D &a, const Vector2D &b) -> const Angle {
+    return Angle{atan2(a^b, a*b)};
 }
 
 auto Vector2D::isCollinear(const Vector2D &a, const Vector2D &b) -> const bool {
-    return sin(angelVectors(a, b).getRadian()) == 0;
+    return sin(AngleVectors(a, b).getRadian()) == 0;
 }
 
 auto Vector2D::onOneLine(const Point2D &a, const Point2D &b, const Point2D &c) -> const bool {
