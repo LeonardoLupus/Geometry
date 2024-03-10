@@ -2,6 +2,7 @@
 .idea
 cmake-build-debug
 src
+libs
 =======
 # Prerequisites
 *.d
