@@ -41,7 +41,6 @@ public:
 
     static auto AngleVectors(const Vector2D& a, const Vector2D& b) -> const Angle;
     static auto isCollinear(const Vector2D& a, const Vector2D& b) -> const bool;
-    static auto onOneLine(const Point2D& a, const Point2D& b, const Point2D& c) -> const bool;
 
 private:
     auto resetToZero(Point2D& point)->void;

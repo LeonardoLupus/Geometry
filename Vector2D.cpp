@@ -125,12 +125,6 @@ auto Vector2D::isCollinear(const Vector2D &a, const Vector2D &b) -> const bool {
     return sin(AngleVectors(a, b).getRadian()) == 0;
 }
 
-auto Vector2D::onOneLine(const Point2D &a, const Point2D &b, const Point2D &c) -> const bool {
-    Vector2D z(a, b);
-    Vector2D w(b, c);
-    return isCollinear(z, w);
-}
-
 auto Vector2D::resetToZero(Point2D& point) -> void {
     point.setXY(0, 0);
 }
