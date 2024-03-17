@@ -22,6 +22,7 @@ public:
     Vector2D();
     explicit Vector2D(const Point2D& end);
     Vector2D(double x, double y);
+    Vector2D(double x1, double y1, double x2, double y2);
     Vector2D(const Point2D& begin, const Point2D& end);
     Vector2D(const Angle& phi, double length, Point2D begin = {0, 0});
 

@@ -273,6 +273,37 @@ TEST(TestGeometry, PointOnLine) {
     ASSERT_FALSE(Geometry::onOneLine(f, a, d));
 }
 
+TEST(TestGeometry, sidePoint) {
+    Vector2D a(0, 0, 5, 5);
+    Point2D b(6, 6);
+    Point2D c(0, 0);
+    Point2D d(3, 1);
+    Point2D e(1, 100);
+    Point2D f(-4, -5);
+    Point2D g(-2, 2);
+
+    ASSERT_FALSE(Geometry::isPointRigthofVector(b, a));
+    ASSERT_FALSE(Geometry::isPointRigthofVector(c, a));
+    ASSERT_TRUE(Geometry::isPointRigthofVector(d, a));
+    ASSERT_FALSE(Geometry::isPointRigthofVector(e, a));
+    ASSERT_TRUE(Geometry::isPointRigthofVector(f, a));
+    ASSERT_FALSE(Geometry::isPointRigthofVector(g, a));
+}
+
+TEST(Geometry, AreaTriangle) {
+    Point2D a(0, 0);
+    Point2D b(3, 0);
+    Point2D c(0, 4);
+    Point2D d(5, 2);
+    Point2D e(-3, -2);
+    Point2D f(8, 0);
+
+    ASSERT_DOUBLE_EQ(Geometry::areaOfTriangle(a, b, c), 6);
+    ASSERT_DOUBLE_EQ(Geometry::areaOfTriangle(a, d, c), 10);
+    ASSERT_DOUBLE_EQ(Geometry::areaOfTriangle(a, e, c), 6);
+    ASSERT_DOUBLE_EQ(Geometry::areaOfTriangle(a, b, f), 0);
+}
+
 int main() {
     // Test Angle
     ::testing::InitGoogleTest();

@@ -52,6 +52,12 @@ Vector2D::Vector2D(const double x, const double y) {
     direction = {x, y};
 }
 
+Vector2D::Vector2D(double x1, double y1, double x2, double y2) {
+    pointStart = {x1, y1};
+    pointEnd = {x2, y2};
+    calculateDirection();
+}
+
 Vector2D::Vector2D(const Point2D& begin, const Point2D& end) {
     pointStart = begin;
     pointEnd = end;
