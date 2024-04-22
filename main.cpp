@@ -62,6 +62,39 @@ TEST(TestAngle, AngleUnOperators) {
     ASSERT_EQ(b.getRadian(), 3.141592);
 }
 
+TEST(TestVector, CreateVector) {
+    Vector2D a;
+    Vector2D b(Point2D(1, 1));
+    Vector2D c(Point2D(1, 1), Point2D(4, 4));
+    Vector2D d(Angle(PI/2), 5);
+    Vector2D e(Angle(PI), 1, Point2D(1, 1));
+
+    ASSERT_DOUBLE_EQ(a.getX(), 0);
+    ASSERT_DOUBLE_EQ(a.getY(), 0);
+    ASSERT_DOUBLE_EQ(a.getStart().getX(), 0);
+    ASSERT_DOUBLE_EQ(a.getStart().getY(), 0);
+
+    ASSERT_DOUBLE_EQ(b.getX(), 1);
+    ASSERT_DOUBLE_EQ(b.getY(), 1);
+    ASSERT_DOUBLE_EQ(b.getStart().getX(), 0);
+    ASSERT_DOUBLE_EQ(b.getStart().getY(), 0);
+
+    ASSERT_DOUBLE_EQ(c.getX(), 3);
+    ASSERT_DOUBLE_EQ(c.getY(), 3);
+    ASSERT_DOUBLE_EQ(c.getStart().getX(), 1);
+    ASSERT_DOUBLE_EQ(c.getStart().getY(), 1);
+
+    ASSERT_DOUBLE_EQ(d.getX(), 0);
+    ASSERT_DOUBLE_EQ(d.getY(), 5);
+    ASSERT_DOUBLE_EQ(d.getStart().getX(), 0);
+    ASSERT_DOUBLE_EQ(d.getStart().getY(), 0);
+
+    ASSERT_DOUBLE_EQ(e.getX(), 0);
+    ASSERT_DOUBLE_EQ(e.getY(), 1);
+    ASSERT_DOUBLE_EQ(e.getStart().getX(), 1);
+    ASSERT_DOUBLE_EQ(e.getStart().getY(), 1);
+}
+
 TEST(TestVector, Operators) {
     Vector2D a(2, 2);
     Vector2D b(3, 1);
@@ -69,17 +102,17 @@ TEST(TestVector, Operators) {
     Vector2D e(4, 3);
 
     Vector2D c = a + b;
-    ASSERT_DOUBLE_EQ(c.getVectorX(), 5);
-    ASSERT_DOUBLE_EQ(c.getVectorY(), 3);
+    ASSERT_DOUBLE_EQ(c.getX(), 5);
+    ASSERT_DOUBLE_EQ(c.getY(), 3);
 
     c = a + d;
-    ASSERT_DOUBLE_EQ(c.getVectorX(), -3);
-    ASSERT_DOUBLE_EQ(c.getVectorY(), -1);
+    ASSERT_DOUBLE_EQ(c.getX(), -3);
+    ASSERT_DOUBLE_EQ(c.getY(), -1);
 
     c = e * 2;
-    ASSERT_EQ(c.getLength(), 10);
-    ASSERT_DOUBLE_EQ(c.getVectorX(), 8);
-    ASSERT_DOUBLE_EQ(c.getVectorY(), 6);
+    ASSERT_EQ(c.getRadius(), 10);
+    ASSERT_DOUBLE_EQ(c.getX(), 8);
+    ASSERT_DOUBLE_EQ(c.getY(), 6);
 }
 
 TEST(TestVector, VectorsOperators) {
@@ -121,6 +154,19 @@ TEST(TestVector, VectorsOperators) {
 
     z = e ^ b;
     ASSERT_DOUBLE_EQ(z, 4);
+}
+
+TEST(TestVector, AngelBTWVector) {
+    Vector2D a(2, 2);
+    Vector2D b(3, 1);
+    Vector2D c(Point2D(-5, 0), Point2D(0, 5));
+    Vector2D d(Point2D(2, 3), Point2D(5, 4));
+
+    ASSERT_TRUE(Vector2D::isCollinear(a, a));
+    ASSERT_TRUE(Vector2D::isCollinear(a, c));
+    ASSERT_TRUE(Vector2D::isCollinear(b, d));
+    ASSERT_FALSE(Vector2D::isCollinear(a, b));
+    ASSERT_FALSE(Vector2D::isCollinear(a,  d));
 }
 
 TEST(TestMatrix, MatrixSize) {
@@ -274,7 +320,7 @@ TEST(TestGeometry, PointOnLine) {
 }
 
 TEST(TestGeometry, sidePoint) {
-    Vector2D a(0, 0, 5, 5);
+    Vector2D a(Point2D(0, 0), Point2D(5, 5));
     Point2D b(6, 6);
     Point2D c(0, 0);
     Point2D d(3, 1);
@@ -282,12 +328,12 @@ TEST(TestGeometry, sidePoint) {
     Point2D f(-4, -5);
     Point2D g(-2, 2);
 
-    ASSERT_FALSE(Geometry::isPointRigthofVector(b, a));
-    ASSERT_FALSE(Geometry::isPointRigthofVector(c, a));
-    ASSERT_TRUE(Geometry::isPointRigthofVector(d, a));
-    ASSERT_FALSE(Geometry::isPointRigthofVector(e, a));
-    ASSERT_TRUE(Geometry::isPointRigthofVector(f, a));
-    ASSERT_FALSE(Geometry::isPointRigthofVector(g, a));
+    ASSERT_FALSE(Geometry::isPointRigthOfVector(b, a));
+    ASSERT_FALSE(Geometry::isPointRigthOfVector(c, a));
+    ASSERT_TRUE(Geometry::isPointRigthOfVector(d, a));
+    ASSERT_FALSE(Geometry::isPointRigthOfVector(e, a));
+    ASSERT_TRUE(Geometry::isPointRigthOfVector(f, a));
+    ASSERT_FALSE(Geometry::isPointRigthOfVector(g, a));
 }
 
 TEST(Geometry, AreaTriangle) {
@@ -309,6 +355,8 @@ int main() {
     ::testing::InitGoogleTest();
 
     // std::cout << q;
+
+
 
     return RUN_ALL_TESTS();
     // return 0;

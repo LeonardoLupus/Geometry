@@ -5,7 +5,7 @@
 #ifndef ANGLE_H
 #define ANGLE_H
 
-constexpr double PI = 3.14159265359;
+constexpr double PI = 3.1415926535897932384626433832795;
 
 class Angle {
 public:
@@ -17,6 +17,7 @@ public:
     friend auto operator+(const Angle& aAngle, const Angle& bAngle)-> Angle;
     friend auto operator-(const Angle& aAngle, const Angle& bAngle)-> Angle;
     friend auto operator/(const Angle& aAngle, const Angle& bAngle)-> double;
+    friend auto operator<=>(const Angle& aAngel, const Angle& bAngel)-> bool = default;
     friend auto operator/(const Angle& aAngle, double num)-> Angle;
     friend auto operator*(const Angle& aAngle, double num)-> Angle;
     auto operator+=(const Angle& bAngle)->Angle&;
@@ -27,10 +28,10 @@ public:
     auto setDegree(double degree) -> void;
     auto setRadian(double radians) -> void;
 
-    auto getDegree() const -> const double;
-    auto getRadian() const -> const double;
-    auto getBisectorDegree() const -> const double;
-    auto getBisectorRadians() const -> const double;
+    [[nodiscard]] auto getDegree() const -> double;
+    [[nodiscard]] auto getRadian() const -> double;
+    [[nodiscard]] auto getBisectorDegree() const -> double;
+    [[nodiscard]] auto getBisectorRadians() const -> double;
 
 private:
     double angle;

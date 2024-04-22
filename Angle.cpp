@@ -36,10 +36,7 @@ auto Angle::operator-=(const Angle& bAngle) -> Angle& {
     return *this;
 }
 
-auto Angle::operator=(const Angle &addAngle) -> Angle& {
-    angle = addAngle.angle;
-    return *this;
-}
+auto Angle::operator=(const Angle &addAngle) -> Angle& = default;
 
 auto Angle::operator=(const double addAngle) -> Angle & {
     angle = addAngle;
@@ -69,19 +66,19 @@ auto Angle::setRadian(const double radians) -> void {
     AngleAdjustment();
 }
 
-auto Angle::getDegree() const -> const double {
+auto Angle::getDegree() const -> double {
     return angle * 180 / PI;
 }
 
-auto Angle::getRadian() const -> const double {
+auto Angle::getRadian() const -> double {
     return angle;
 }
 
-auto Angle::getBisectorDegree() const -> const double {
+auto Angle::getBisectorDegree() const -> double {
     return getDegree()/2;
 }
 
-auto Angle::getBisectorRadians() const -> const double {
+auto Angle::getBisectorRadians() const -> double {
     return getRadian()/2;
 }
 
@@ -90,3 +87,5 @@ auto Angle::AngleAdjustment() -> void {
         angle = std::fmod(angle, 2*PI);
     }
 }
+
+

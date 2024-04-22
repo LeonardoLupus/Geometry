@@ -18,6 +18,7 @@ public:
     friend auto operator-(const Point2D& aPoint, const Point2D& bPoint)->Point2D;
     auto operator=(const Point2D& bPoint)->Point2D&;
 
+    auto setPoint(const Point2D& point)->void;
     auto setXY(double x, double y)->void;
     auto setPolar(double radius, const Angle& theta)->void;
     auto addX(double x)->void;
@@ -25,15 +26,18 @@ public:
     auto addRadius(double radius)->void;
     auto addTheta(const Angle& theta)->void;
 
-    auto getX()const->const double&;
-    auto getY()const->const double&;
-    auto getRadius()const->const double&;
-    auto getTheta()const->const Angle&;
+    [[nodiscard]] auto get()const->Point2D;
+    [[nodiscard]] auto getX()const-> double;
+    [[nodiscard]] auto getY()const-> double;
+    [[nodiscard]] auto getRadius()const-> double;
+    [[nodiscard]] auto getTheta() const -> Angle;
 
-    auto isNull()-> const bool;
+    [[nodiscard]] auto isNull() const -> bool;
+    static auto roundPr(double number, unsigned int pr)->double;
 
-private:
-    auto calculateCoord(bool xy= true)->void;
+protected:
+    auto convertToCartesian()->void;
+    auto convertToPolar()->void;
 
     double x;
     double y;
