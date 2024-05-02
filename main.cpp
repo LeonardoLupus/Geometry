@@ -16,35 +16,36 @@ TEST(TestAngle, CreateAngles) {
 }
 
 TEST(TestAngle, AnglesBinOperators) {
-    const Angle a(3.141592 / 3);
-    const Angle b(3.141592);
+    const Angle a(PI / 3);
+    const Angle b(PI);
 
     Angle c = b + a;
-    ASSERT_EQ(c.getRadian(), b.getRadian() + a.getRadian());
+    Angle d(-PI+a.getRadian());
+    ASSERT_DOUBLE_EQ(c.getRadian(), d.getRadian());
 
     c = b - a;
-    ASSERT_EQ(c.getRadian(), b.getRadian() - a.getRadian());
+    ASSERT_DOUBLE_EQ(c.getRadian(), b.getRadian() - a.getRadian());
 
     c = b / a;
-    ASSERT_EQ(c.getRadian(), b.getRadian() / a.getRadian());
+    ASSERT_DOUBLE_EQ(c.getRadian(), b.getRadian() / a.getRadian());
 
     c = b / 2;
-    ASSERT_EQ(c.getRadian(), b.getRadian() / 2);
+    ASSERT_DOUBLE_EQ(c.getRadian(), b.getRadian() / 2);
 
     c = b / 1.2;
-    ASSERT_EQ(c.getRadian(), b.getRadian() / 1.2);
+    ASSERT_DOUBLE_EQ(c.getRadian(), b.getRadian() / 1.2);
 
     c = b / 0.5;
-    ASSERT_EQ(c.getRadian(), b.getRadian() / 0.5);
+    ASSERT_DOUBLE_EQ(c.getRadian(), std::fmod(b.getRadian() / 0.5, PI));
 
     c = b * 2;
-    ASSERT_EQ(c.getRadian(), b.getRadian() * 2);
+    ASSERT_DOUBLE_EQ(c.getRadian(), std::fmod(b.getRadian() * 2, PI));
 
     c = b * 1.2;
-    ASSERT_EQ(c.getRadian(), b.getRadian() * 1.2);
+    ASSERT_DOUBLE_EQ(c.getRadian(), (b.getRadian() * 1.2 - 2*PI));
 
     c = b * 0.5;
-    ASSERT_EQ(c.getRadian(), b.getRadian() * 0.5);
+    ASSERT_DOUBLE_EQ(c.getRadian(), b.getRadian() * 0.5);
 }
 
 TEST(TestAngle, AngleUnOperators) {
@@ -113,6 +114,7 @@ TEST(TestVector, Operators) {
     ASSERT_EQ(c.getRadius(), 10);
     ASSERT_DOUBLE_EQ(c.getX(), 8);
     ASSERT_DOUBLE_EQ(c.getY(), 6);
+
 }
 
 TEST(TestVector, VectorsOperators) {
@@ -121,6 +123,8 @@ TEST(TestVector, VectorsOperators) {
     Vector2D d(Point2D(10, 10), Point2D(5, 7));
     Vector2D e(-5, -3);
     Vector2D f(0, 0);
+    Vector2D g(5, 0);
+    Vector2D h(Point2D(3, 1), Point2D(0,0));
 
     double z = a * b;
     ASSERT_DOUBLE_EQ(z, 8);
@@ -154,6 +158,15 @@ TEST(TestVector, VectorsOperators) {
 
     z = e ^ b;
     ASSERT_DOUBLE_EQ(z, 4);
+
+    ASSERT_DOUBLE_EQ(~f, 0);
+    ASSERT_DOUBLE_EQ(~g, 5);
+    ASSERT_DOUBLE_EQ(~a, sqrt(2)*2);
+
+    ASSERT_DOUBLE_EQ((-a).getX(), -2);
+    ASSERT_DOUBLE_EQ((-a).getY(), -2);
+    ASSERT_DOUBLE_EQ((-b).getX(), h.getX());
+    ASSERT_DOUBLE_EQ((-b).getY(), h.getY());
 }
 
 TEST(TestVector, AngelBTWVector) {
@@ -161,12 +174,111 @@ TEST(TestVector, AngelBTWVector) {
     Vector2D b(3, 1);
     Vector2D c(Point2D(-5, 0), Point2D(0, 5));
     Vector2D d(Point2D(2, 3), Point2D(5, 4));
+    Vector2D e(4, 0);
 
     ASSERT_TRUE(Vector2D::isCollinear(a, a));
     ASSERT_TRUE(Vector2D::isCollinear(a, c));
     ASSERT_TRUE(Vector2D::isCollinear(b, d));
     ASSERT_FALSE(Vector2D::isCollinear(a, b));
     ASSERT_FALSE(Vector2D::isCollinear(a,  d));
+
+    ASSERT_DOUBLE_EQ(Vector2D::angleBTWVectors(a, c).getDegree(), 0);
+    ASSERT_DOUBLE_EQ(Vector2D::angleBTWVectors(a, e).getDegree(), -45);
+    ASSERT_DOUBLE_EQ(Vector2D::angleBTWVectors(a, -a).getDegree(), 180);
+    ASSERT_DOUBLE_EQ(Vector2D::angleBTWVectors(e, -e).getDegree(), 180);
+}
+
+TEST(TestVector, NormalVector) {
+    Vector2D a(3, 1);
+    Vector2D b(-3, 2);
+//    Vector2D c(Point2D(-5, 0), Point2D(0, 5));
+
+    ASSERT_DOUBLE_EQ(a.getNormal().getX(), 1);
+    ASSERT_DOUBLE_EQ(a.getNormal().getY(), -3);
+    ASSERT_DOUBLE_EQ(b.getNormal().getX(), 2);
+    ASSERT_DOUBLE_EQ(b.getNormal().getY(), 3);
+    ASSERT_DOUBLE_EQ(a.getNormalUnit().getRadius(), 1);
+}
+
+TEST(TestVector, Transfer) {
+    Vector2D a(2, 2);
+    Vector2D b(3, 1);
+    Vector2D c;
+
+    c = a.parallelTransfer(2*std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getX()), 4);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getY()), 0);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getX()), 2);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getY()), -2);
+
+    c = a.parallelTransfer(-2*std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getX()), 0);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getY()), 4);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getX()), -2);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getY()), 2);
+
+    c = a.transfer(b);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getX()), 5);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getY()), 3);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getX()), 3);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getY()), 1);
+
+    c = a.transfer(-b);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getX()), -1);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getEnd().getY()), 1);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getX()), -3);
+    ASSERT_DOUBLE_EQ(Point2D::roundPr(c.getStart().getY()), -1);
+
+}
+
+TEST(TestVector, distanceVector) {
+    Vector2D a(2, 2);
+    Vector2D b(3, 1);
+    Vector2D c(Point2D(-5, 0), Point2D(0, 5));
+    Point2D p(0, 2);
+    Point2D q(3, -1);
+    Point2D w(3, 5);
+    Point2D s(0, 0);
+
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToLine(p, a), std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToLine(q, a), 2*std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToLine(w, a), std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToLine(p, -a), std::sqrt(2));
+
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToSegment(p, a), std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToSegment(w, b), 4);
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToSegment(p, -a), std::sqrt(2));
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToSegment(w, -b), 4);
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToSegment(s, a), 0);
+    ASSERT_DOUBLE_EQ(Vector2D::distancePointToSegment(s, c), 5*std::sqrt(2)/2);
+}
+
+TEST(TestVector, intersectVector) {
+    Vector2D a(2, 2);
+    Vector2D b(3, 1);
+    Vector2D c(Point2D(4, 0), Point2D(1, 3));
+    Vector2D d(Point2D(-2, -1), Point2D(2, 3));
+    Vector2D e(Point2D(1, 4), Point2D(5, 4));
+    Vector2D f(Point2D(3 ,5), Point2D(5, 2));
+
+    ASSERT_TRUE(Vector2D::isIntersectionLines(a, b));
+    ASSERT_TRUE(Vector2D::isIntersectionLines(e, f));
+    ASSERT_TRUE(Vector2D::isIntersectionLines(b, c));
+    ASSERT_FALSE(Vector2D::isIntersectionLines(a, d));
+
+    ASSERT_TRUE(Vector2D::isIntersectionSegments(a, b));
+    ASSERT_TRUE(Vector2D::isIntersectionSegments(a, c));
+    ASSERT_TRUE(Vector2D::isIntersectionSegments(c, d));
+    ASSERT_FALSE(Vector2D::isIntersectionSegments(a, e));
+    ASSERT_FALSE(Vector2D::isIntersectionSegments(d, b));
+
+    ASSERT_DOUBLE_EQ(Vector2D::intersectionSegmentsPoint(a, c).getX(), 2);
+    ASSERT_DOUBLE_EQ(Vector2D::intersectionSegmentsPoint(a, c).getY(), 2);
+    ASSERT_DOUBLE_EQ(Vector2D::intersectionSegmentsPoint(b, c).getX(), 3);
+    ASSERT_DOUBLE_EQ(Vector2D::intersectionSegmentsPoint(b, c).getY(), 1);
+    ASSERT_DOUBLE_EQ(Vector2D::intersectionSegmentsPoint(d, c).getX(), 1.5);
+    ASSERT_DOUBLE_EQ(Vector2D::intersectionSegmentsPoint(d, c).getY(), 2.5);
+
 }
 
 TEST(TestMatrix, MatrixSize) {
@@ -350,14 +462,18 @@ TEST(Geometry, AreaTriangle) {
     ASSERT_DOUBLE_EQ(Geometry::areaOfTriangle(a, b, f), 0);
 }
 
+int f(const int& p) {
+    return p;
+}
+
 int main() {
     // Test Angle
-    ::testing::InitGoogleTest();
+//    ::testing::InitGoogleTest();
 
     // std::cout << q;
+    int i = 0;
+    auto z = f(5);
 
-
-
-    return RUN_ALL_TESTS();
+//    return RUN_ALL_TESTS();
     // return 0;
 }

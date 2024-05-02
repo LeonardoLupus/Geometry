@@ -49,6 +49,7 @@ Angle::Angle() {
 
 Angle::Angle(const Angle &copy) {
     angle = copy.angle;
+    AngleAdjustment();
 }
 
 Angle::Angle(const double radians) {
@@ -83,9 +84,12 @@ auto Angle::getBisectorRadians() const -> double {
 }
 
 auto Angle::AngleAdjustment() -> void {
-    if (angle > 2*PI || angle < 2*PI) {
-        angle = std::fmod(angle, 2*PI);
-    }
+//    if (angle > PI || angle < -PI) {
+//        angle = std::fmod(angle, PI);
+//    }
+    if(angle > 2*PI || angle < -2*PI) { angle = std::fmod(angle, 2*PI);}
+    if(angle > PI) {angle= angle - 2*PI;}
+    else if(angle < -PI) {angle += 2*PI;}
 }
 
 

@@ -11,7 +11,7 @@ class Angle {
 public:
     Angle();
     Angle(const Angle& copy);
-    // Поумолчанию углы задаются в радианах
+    // Поумолчанию углы задаются в радианах [-2 PI : 2 PI]
     explicit Angle(double radians);
 
     friend auto operator+(const Angle& aAngle, const Angle& bAngle)-> Angle;

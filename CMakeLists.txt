@@ -14,6 +14,8 @@ add_executable(${PROJECT_NAME} main.cpp
         Matrix.h
         Geometry.cpp
         Geometry.h
+        Line2D.cpp
+        Line2D.h
 )
 
 add_subdirectory(libs/googletest)

@@ -14,13 +14,7 @@ auto operator-(const Point2D& aPoint, const Point2D& bPoint) -> Point2D {
     return {aPoint.x - bPoint.x, aPoint.y - bPoint.y};
 }
 
-auto Point2D::operator=(const Point2D& bPoint) -> Point2D& {
-    x = bPoint.x;
-    y = bPoint.y;
-    radius = bPoint.radius;
-    theta = bPoint.theta;
-    return *this;
-}
+auto Point2D::operator=(const Point2D& bPoint) -> Point2D& = default;
 
 Point2D::Point2D() {
     this->x = 0;
@@ -97,8 +91,8 @@ auto Point2D::isNull() const -> bool {
 }
 
 auto Point2D::convertToCartesian() -> void {
-    x = radius * roundPr(std::cos(theta.getRadian()), 10);
-    y = radius * roundPr(std::sin(theta.getRadian()), 10);
+    x = radius * roundPr(std::cos(theta.getRadian()));
+    y = radius * roundPr(std::sin(theta.getRadian()));
 }
 
 auto Point2D::convertToPolar() -> void {
@@ -121,6 +115,14 @@ auto Point2D::get() const -> Point2D {
 auto Point2D::roundPr(const double number, unsigned int pr) -> double {
     double p = pow(10, pr);
     return (round(number* p) / p);
+}
+
+auto Point2D::getRadian() const -> double {
+    return theta.getRadian();
+}
+
+auto Point2D::errorPoint() -> Point2D {
+    return Point2D{MAX_DOUBLE, MAX_DOUBLE};
 }
 
 

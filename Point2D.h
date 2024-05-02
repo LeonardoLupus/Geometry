@@ -7,6 +7,9 @@
 
 #include "Angle.h"
 
+const double MAX_DOUBLE = 1.79769e+308;
+const unsigned int PRECISION = 10;
+
 class Point2D {
 public:
     Point2D();
@@ -16,7 +19,7 @@ public:
 
     friend auto operator+(const Point2D& aPoint, const Point2D& bPoint)->Point2D;
     friend auto operator-(const Point2D& aPoint, const Point2D& bPoint)->Point2D;
-    auto operator=(const Point2D& bPoint)->Point2D&;
+    auto operator=(const Point2D& bPoint) ->Point2D&;
 
     auto setPoint(const Point2D& point)->void;
     auto setXY(double x, double y)->void;
@@ -31,9 +34,11 @@ public:
     [[nodiscard]] auto getY()const-> double;
     [[nodiscard]] auto getRadius()const-> double;
     [[nodiscard]] auto getTheta() const -> Angle;
+    [[nodiscard]] auto getRadian() const -> double;
 
     [[nodiscard]] auto isNull() const -> bool;
-    static auto roundPr(double number, unsigned int pr)->double;
+    static auto roundPr(double number, unsigned int pr = PRECISION)->double;
+    static auto errorPoint() -> Point2D;
 
 protected:
     auto convertToCartesian()->void;
